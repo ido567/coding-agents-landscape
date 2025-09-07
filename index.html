@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>AI Coding Agents — Landscape</title>
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ink: "#EAF2FF",
+            bg: "#070B12",
+            card: "#0C121C",
+            edge: "#152033",
+            neon: "#67A8FF",
+            neon2: "#7AFFEE",
+          },
+          boxShadow: {
+            glow: "0 0 0 1px rgba(103,168,255,.35), 0 10px 40px rgba(10,120,255,.12)",
+          },
+        }
+      }
+    }
+  </script>
+  <!-- React -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <style>
+    body{
+      background:
+        radial-gradient(1200px 600px at 20% -10%, rgba(103,168,255,.20), transparent 60%),
+        radial-gradient(1000px 700px at 110% 20%, rgba(122,255,238,.10), transparent 55%),
+        linear-gradient(180deg, #060910 0%, #070B12 100%);
+      color: #EAF2FF;
+      min-height: 100vh;
+    }
+    .glass { background: rgba(12,18,28,.78); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,.06); }
+    .ring-glow { box-shadow: 0 0 0 1px rgba(122,255,238,.20), inset 0 0 0 1px rgba(255,255,255,.03); }
+    .neon-border { box-shadow: 0 0 0 1px rgba(103,168,255,.35), inset 0 0 0 1px rgba(255,255,255,.04); }
+    .badge img{ vertical-align: middle; }
+    .kicker{ display:inline-block; border:1px solid rgba(103,168,255,.35); background:rgba(103,168,255,.10); padding:.25rem .6rem; border-radius:999px; font-size:.75rem; font-weight:700; color:#B8D4FF }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script>
+    // ===== Normalized type enum =====
+    const TYPES = ["IDE","VS Code Extension","CLI","Cloud Platform","Enterprise Suite","JetBrains Add-on"];
+    const SNAPSHOT = "Snapshot: Sep 7, 2025";
+
+    // ===== Data =====
+    const AGENTS = [
+      { name:"GitHub Copilot", company:"GitHub (Microsoft)", type:"IDE", popularity: 95,
+        pricing:["Free — limited usage","Pro — $10/mo (individual)","Enterprise — $39/user/mo"],
+        homepage:"https://github.com/features/copilot",
+        links:{ vscode:"GitHub.copilot", npm:"", github:"" },
+        key_features:[
+          "Chat + code completion across major IDEs",
+          "Agentic actions (explain, fix, tests) with permissions",
+          "Enterprise policy, audit & compliance options"
+        ]
+      },
+      { name:"Cursor", company:"Anysphere", type:"IDE", popularity: 90,
+        pricing:["Pro — $20/mo","Team — $40+/seat/mo","Ultra — $200/mo"],
+        homepage:"https://www.cursor.com/",
+        links:{ vscode:"", npm:"", github:"" },
+        key_features:[
+          "Repo-wide chat & inline edits",
+          "Auto/Background agents for multi-step tasks",
+          "Project Rules (.cursor/rules) guardrails"
+        ]
+      },
+      { name:"Windsurf Editor", company:"Codeium", type:"IDE", popularity: 75,
+        pricing:["Free — limited credits","Pro — ~$15/mo","Teams — ~$30/user/mo"],
+        homepage:"https://codeium.com/windsurf",
+        links:{ vscode:"", npm:"", github:"" },
+        key_features:["Cascade agent (plan → edit → verify)","Repo awareness, Memories",""Supercomplete" completion"]
+      },
+      { name:"Cline", company:"Open source", type:"VS Code Extension", popularity: 85,
+        pricing:["Free — bring your own model/API key"],
+        homepage:"https://cline.bot/",
+        links:{ vscode:"saoudrizwan.claude-dev", npm:"", github:"cline/cline" },
+        key_features:["Autonomous edits (with approval)","Runs terminal + automates browser","Model-agnostic, MCP integration"]
+      },
+      { name:"Continue.dev", company:"Continue Dev, Inc.", type:"VS Code Extension", popularity: 80,
+        pricing:["Solo — $0","Team — $10/dev/mo","Enterprise — contact sales","Models add-on — usage-based"],
+        homepage:"https://www.continue.dev/",
+        links:{ vscode:"Continue.continue", npm:"@continuedev/cli", github:"continuedev/continue" },
+        key_features:["Agent mode to implement changes","Plan Mode before edits","@context providers; OSS"]
+      },
+      { name:"Roo Code", company:"Roo Code Inc.", type:"VS Code Extension", popularity: 40,
+        pricing:["Free — bring your own models","Optional cloud services"],
+        homepage:"https://docs.roocode.com/",
+        links:{ vscode:"RooVeterinaryInc.roo-cline", npm:"", github:"RooCodeInc/Roo-Code" },
+        key_features:["Autonomous edits; terminal/browser","Custom modes; multi-model","Local workflow + cloud"]
+      },
+      { name:"aider", company:"Open source", type:"CLI", popularity: 78,
+        pricing:["Free — open source (pip install aider)"],
+        homepage:"https://aider.chat/",
+        links:{ vscode:"", npm:"", github:"Aider-AI/aider" },
+        key_features:["Git-aware multi-file edits with diffs","Runs tests/commands","Reproducible changes & commits"]
+      },
+      { name:"Claude Code", company:"Anthropic", type:"CLI", popularity: 70,
+        pricing:["Free (local CLI) — use your API key","Enterprise workflows — via Anthropic/partners"],
+        homepage:"https://www.anthropic.com/claude-code",
+        links:{ vscode:"", npm:"", github:"anthropics/claude-code" },
+        key_features:["Agentic terminal coding across repos","Multi-file edits, Git/PR flows","Long-context reasoning"]
+      },
+      { name:"Amazon Q Developer", company:"AWS", type:"Enterprise Suite", popularity: 65,
+        pricing:["Free tier — limited agentic requests","Pro — $19/user/mo (higher limits)"],
+        homepage:"https://aws.amazon.com/q/developer/",
+        links:{ vscode:"AmazonWebServices.amazon-q-vscode", npm:"", github:"" },
+        key_features:["Agentic coding in IDE/CLI","Code transformation pipelines","IAM/SSO, admin dashboards"]
+      },
+      { name:"Gemini Code Assist", company:"Google Cloud", type:"Enterprise Suite", popularity: 60,
+        pricing:["Individual — free (limited)","Standard — contact sales","Enterprise — contact sales"],
+        homepage:"https://cloud.google.com/products/gemini-code-assist",  <!-- fixed -->
+        links:{ vscode:"GoogleCloudTools.cloudcode", npm:"", github:"" },
+        key_features:["Agent mode with ultra-long context","Checkpoints, terminal capture","Zero-retention options"]
+      },
+      { name:"Replit Agent", company:"Replit", type:"Cloud Platform", popularity: 72,
+        pricing:["Included in Replit Core — ~$20/mo (annual)","Effort-based usage pricing"],
+        homepage:"https://replit.com/agent",
+        links:{ vscode:"", npm:"", github:"" },
+        key_features:["Plan → approve → build checkpoints","Deploy & host on Replit","Effort-based billing"]
+      },
+      { name:"Sourcegraph Cody", company:"Sourcegraph", type:"Enterprise Suite", popularity: 55,
+        pricing:["Free — limited","Pro — paid","Enterprise — paid","Amp (agentic) — prepaid credits"],
+        homepage:"https://sourcegraph.com/cody",
+        links:{ vscode:"sourcegraph.cody-ai", npm:"", github:"" },
+        key_features:["Deep code graph & search","Assistant for edits/navigation","Amp agent via credits"]
+      },
+      { name:"Tabnine", company:"Tabnine", type:"Enterprise Suite", popularity: 68,
+        pricing:["Developer — $9/mo","Enterprise — $39/user/mo","Private/self-hosted & air-gapped"],
+        homepage:"https://www.tabnine.com/",
+        links:{ vscode:"TabNine.tabnine-vscode", npm:"", github:"codota/tabnine-vscode" },
+        key_features:["Completions & chat; agents (preview)","Switchable/self-host models","SaaS/VPC/on-prem/air-gapped"]
+      },
+      { name:"Devin", company:"Cognition", type:"Cloud Platform", popularity: 82,
+        pricing:["Core — usage-based","Team — subscription + usage","Enterprise — contact sales"],
+        homepage:"https://www.cognition.ai/",
+        links:{ vscode:"", npm:"", github:"" },
+        key_features:["Plans, codes, tests, deploys","Team/API, multi-session","Hosted platform"]
+      },
+      { name:"JetBrains AI Assistant", company:"JetBrains", type:"JetBrains Add-on", popularity: 62,
+        pricing:["AI Pro — $10/mo","AI Ultimate — $30/mo"],
+        homepage:"https://www.jetbrains.com/ai/",
+        links:{ vscode:"", npm:"", github:"" },
+        key_features:["Chat, refactors, intentions","Model routing via service","Org governance & quotas"]
+      }
+    ];
+
+    // ===== Icon fallback chain =====
+    const Monogram = ({ name, size=32 }) => {
+      const letters = name.split(/\s+/).map(w=>w[0]).join('').slice(0,2).toUpperCase();
+      const id = "g"+letters+Math.floor(Math.random()*1e6);
+      return React.createElement("svg", { width:size, height:size, viewBox:"0 0 32 32", className:"shrink-0" },
+        React.createElement("defs", null,
+          React.createElement("linearGradient", { id, x1:"0", y1:"0", x2:"1", y2:"1" },
+            React.createElement("stop", { offset:"0%", stopColor:"#67A8FF" }),
+            React.createElement("stop", { offset:"100%", stopColor:"#7AFFEE" })
+          )
+        ),
+        React.createElement("circle", { cx:16, cy:16, r:15, fill:`url(#${id})`, opacity:"0.25", stroke:"#7AFFEE33" }),
+        React.createElement("text", { x:"50%", y:"52%", textAnchor:"middle", dominantBaseline:"middle",
+          fontSize:"13", fontWeight:"800", fill:"#EAF2FF" }, letters)
+      );
+    };
+
+    // Try a.icon → /favicon.ico → /favicon.svg → monogram
+    const BrandIcon = ({ a }) => {
+      const [srcIdx, setSrcIdx] = React.useState(0);
+      const [failed, setFailed] = React.useState(false);
+      const origin = new URL(a.homepage).origin;
+      const sources = React.useMemo(() => {
+        const list = [];
+        if (a.icon) list.push(a.icon);
+        list.push(origin + "/favicon.ico");
+        list.push(origin + "/favicon.svg");
+        return list;
+      }, [a.icon, origin]);
+
+      if (failed) return React.createElement(Monogram, { name: a.name });
+
+      return React.createElement("img", {
+        src: sources[srcIdx],
+        width: 32, height: 32, alt: a.name + " icon",
+        className: "rounded-md ring-1 ring-white/10 bg-white/5",
+        onError: () => {
+          if (srcIdx < sources.length - 1) setSrcIdx(srcIdx + 1);
+          else setFailed(true);
+        }
+      });
+    };
+
+    // ===== Badges (no self-heal). Add static VS pill + retry for shields =====
+    const pill = (label, href, title = "") =>
+      `<a class="inline-flex items-center gap-1 rounded-full border border-sky-400/40 bg-sky-400/10 px-2.5 py-1 text-xs font-semibold text-sky-200"
+          href="${href}" target="_blank" rel="noopener noreferrer" title="${title}">
+          ${label}
+       </a>`;
+
+    const BadgeLinks = ({ links }) => {
+      const items = [];
+      const controls = [];
+
+      // VS Code — static pill + dynamic shields (can error/rate-limit)
+      if (links?.vscode) {
+        const id = links.vscode; // keep publisher.extension (no encoding)
+        const vsmUrl = `https://marketplace.visualstudio.com/items?itemName=${id}`;
+
+        const installsSrc = `https://img.shields.io/visual-studio-marketplace/i/${id}`;
+        const ratingSrc   = `https://img.shields.io/visual-studio-marketplace/stars/${id}`;
+
+        items.push(
+          `<a class="badge" href="${vsmUrl}" target="_blank" rel="noopener noreferrer">
+             <img alt="vs marketplace installs" src="${installsSrc}">
+           </a>`,
+          `<a class="badge" href="${vsmUrl}" target="_blank" rel="noopener noreferrer">
+             <img alt="rating" src="${ratingSrc}">
+           </a>`
+        );
+
+        // manual retry (cache-bust) for shields hits
+        controls.push(
+          `<button class="ml-2 text-xs text-slate-300/80 hover:text-sky-200 underline"
+                   onclick="
+                     const imgs = this.parentElement.querySelectorAll('img[alt^=vs], img[alt=rating]');
+                     imgs.forEach(img => { img.src = img.src.split('?')[0] + '?r=' + Math.random().toString(36).slice(2); });
+                   ">
+             retry
+           </button>`
+        );
+      }
+
+      // npm — encode for scoped packages
+      if (links?.npm) {
+        const pEncoded = encodeURIComponent(links.npm);
+        items.push(
+          `<a class="badge" href="https://www.npmjs.com/package/${pEncoded}" target="_blank" rel="noopener noreferrer">
+             <img alt="downloads" src="https://img.shields.io/npm/dm/${pEncoded}">
+           </a>`
+        );
+      }
+
+      // GitHub — DO NOT encode user/repo
+      if (links?.github) {
+        const repo = links.github;
+        items.push(
+          `<a class="badge" href="https://github.com/${repo}" target="_blank" rel="noopener noreferrer">
+             <img alt="Stars" src="https://img.shields.io/github/stars/${repo}?style=social">
+           </a>`
+        );
+      }
+
+      const html = (items.join("") || '<span class="text-slate-400">—</span>') + (controls.join("") || "");
+      return React.createElement("div", {
+        className: "flex flex-wrap items-center gap-2",
+        dangerouslySetInnerHTML: { __html: html }
+      });
+    };
+
+    const FeatureList = ({ items }) =>
+      React.createElement("ul", { className:"list-disc ml-5 space-y-1" },
+        ...(items||[]).map((it,i)=>React.createElement("li",{key:i},it))
+      );
+
+    const PriceList = ({ items }) =>
+      React.createElement("ul", { className:"space-y-1" },
+        ...(items||[]).map((it,i)=>React.createElement("li",{key:i},it))
+      );
+
+    const Row = ({ a, idx }) => (
+      React.createElement("tr", { className: (idx % 2 ? "bg-white/3" : "") },
+        React.createElement("td", { className:"px-4 py-4 align-top" },
+          React.createElement("div", { className:"flex items-center gap-3" },
+            React.createElement(BrandIcon, { a }),
+            React.createElement("div", null,
+              React.createElement("a", { href:a.homepage, target:"_blank", rel:"noopener", className:"text-neon hover:underline font-semibold" }, a.name),
+              React.createElement("div", { className:"text-xs text-slate-400" }, new URL(a.homepage).hostname.replace(/^www\./,''))
+            )
+          )
+        ),
+        React.createElement("td", { className:"px-4 py-4 align-top text-slate-200" }, a.company),
+        React.createElement("td", { className:"px-4 py-4 align-top" },
+          React.createElement("span", { className:"inline-flex items-center rounded-full border border-sky-400/40 bg-sky-400/10 px-2.5 py-1 text-xs font-semibold text-sky-200" }, a.type)
+        ),
+        React.createElement("td", { className:"px-4 py-4 align-top text-slate-200" }, React.createElement(PriceList,{items:a.pricing})),
+        React.createElement("td", { className:"px-4 py-4 align-top w-[26rem] text-slate-100" }, React.createElement(FeatureList,{items:a.key_features})),
+        React.createElement("td", { className:"px-4 py-4 align-top text-center" },
+          React.createElement("div", { className:"inline-flex items-center justify-center w-12 h-8 rounded-full bg-gradient-to-r from-neon/20 to-neon2/20 border border-neon/30 text-neon font-semibold text-sm" }, a.popularity)
+        ),
+        React.createElement("td", { className:"px-4 py-4 align-top" }, React.createElement(BadgeLinks,{links:a.links}))
+      )
+    );
+
+    const Toolbar = ({ q, setQ, type, setType, sortKey, setSortKey, asc, setAsc }) => {
+      const sorters = [{key:"popularity",label:"Popularity"},{key:"name",label:"Name"},{key:"company",label:"Company"},{key:"type",label:"Type"}];
+      return (
+        React.createElement("div", { className:"flex flex-col gap-3 md:flex-row md:items-center md:justify-between" },
+          React.createElement("div", { className:"flex flex-wrap gap-2 items-center" },
+            React.createElement("input", {
+              type:"search", placeholder:"Search name/company/type/features…",
+              className:"w-[22rem] rounded-lg bg-slate-900/60 border border-edge px-3 py-2 text-ink placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 ring-glow",
+              value:q, onChange:e=>setQ(e.target.value)
+            }),
+            React.createElement("select", {
+              className:"rounded-lg bg-slate-900/60 border border-edge px-3 py-2 text-ink focus:outline-none focus:ring-2 focus:ring-sky-500 ring-glow",
+              value:type, onChange:e=>setType(e.target.value)
+            },
+              React.createElement("option",{value:""},"All types"),
+              ...TYPES.map(t=>React.createElement("option",{key:t,value:t},t))
+            )
+          ),
+          React.createElement("div", { className:"flex gap-2" },
+            ...sorters.map(s =>
+              React.createElement("button", {
+                key:s.key,
+                className:"rounded-md px-3 py-2 bg-slate-900/60 border border-edge text-slate-200 hover:bg-slate-800/60 ring-glow",
+                onClick:()=>{ if (sortKey===s.key) setAsc(!asc); else { setSortKey(s.key); setAsc(true);} }
+              }, s.label, sortKey===s.key ? (asc ? " ↑" : " ↓") : "")
+            )
+          )
+        )
+      );
+    };
+
+    const Table = ({ data }) => {
+      const [q,setQ]=React.useState("");
+      const [type,setType]=React.useState("");
+      const [sortKey,setSortKey]=React.useState("popularity");
+      const [asc,setAsc]=React.useState(false);
+
+      const filtered = React.useMemo(()=>{
+        const s=q.trim().toLowerCase();
+        const base=data.filter(a=>!type||a.type===type);
+        const searched=!s?base:base.filter(a=>
+          (a.name+" "+a.company+" "+a.type+" "+(a.key_features||[]).join(" ")).toLowerCase().includes(s)
+        );
+        const sorted=[...searched].sort((a,b)=>{
+          const av = a[sortKey] ?? "";
+          const bv = b[sortKey] ?? "";
+          
+          // Handle numeric sorting for popularity
+          if (sortKey === "popularity") {
+            const numA = Number(av);
+            const numB = Number(bv);
+            return asc ? numA - numB : numB - numA;
+          }
+          
+          // Handle string sorting for other fields
+          const strA = av.toString().toLowerCase();
+          const strB = bv.toString().toLowerCase();
+          if(strA<strB) return asc?-1:1;
+          if(strA>strB) return asc?1:-1;
+          return 0;
+        });
+        return sorted;
+      },[q,type,sortKey,asc,data]);
+
+      return (
+        React.createElement("div", { className:"space-y-4" },
+          React.createElement(Toolbar,{q,setQ,type,setType,sortKey,setSortKey,asc,setAsc}),
+          React.createElement("div", { className:"overflow-x-auto rounded-2xl border border-edge neon-border shadow-glow" },
+            React.createElement("table", { className:"min-w-full text-sm" },
+              React.createElement("thead", { className:"bg-slate-900/60" },
+                React.createElement("tr", null,
+                  React.createElement("th", { className:"px-4 py-3 text-left font-semibold" }, "Agent"),
+                  React.createElement("th", { className:"px-4 py-3 text-left font-semibold" }, "Company"),
+                  React.createElement("th", { className:"px-4 py-3 text-left font-semibold" }, "Type"),
+                  React.createElement("th", { className:"px-4 py-3 text-left font-semibold" }, "Pricing"),
+                  React.createElement("th", { className:"px-4 py-3 text-left font-semibold" }, "Key features"),
+                  React.createElement("th", { className:"px-4 py-3 text-center font-semibold" }, "Popularity"),
+                  React.createElement("th", { className:"px-4 py-3 text-left font-semibold" }, "Links")
+                )
+              ),
+              React.createElement("tbody", null,
+                filtered.map((a,i)=>React.createElement(Row,{a,idx:i,key:a.name}))
+              )
+            )
+          ),
+          React.createElement("div", { className:"flex items-center gap-2 text-xs text-slate-400" },
+            React.createElement("span", { className:"kicker" }, SNAPSHOT),
+            React.createElement("span", null, "Prices/limits change frequently; verify on the product site.")
+          )
+        )
+      );
+    };
+
+    const App = () => (
+      React.createElement("main", { className:"mx-auto max-w-7xl p-6" },
+        React.createElement("header", { className:"mb-6" },
+          React.createElement("div", { className:"kicker mb-2" }, "AI Coding Agents • Landscape"),
+          React.createElement("h1", { className:"text-3xl md:text-4xl font-extrabold tracking-tight" },
+            React.createElement("span", { className:"bg-gradient-to-r from-neon to-neon2 bg-clip-text text-transparent" }, "Discover, compare, decide.")
+          ),
+          React.createElement("p", { className:"max-w-3xl text-slate-300 mt-2" },
+            "A sleek overview of agentic coding tools. Filter by type, search, and scan pricing & features at a glance."
+          )
+        ),
+        React.createElement("section", { className:"glass rounded-2xl p-4 md:p-6 border-edge shadow-glow" },
+          React.createElement(Table, { data: AGENTS })
+        )
+      )
+    );
+
+    ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(App));
+  </script>
+</body>
+</html>
