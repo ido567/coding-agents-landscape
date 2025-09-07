@@ -54,7 +54,7 @@
 
     // ===== Data =====
     const AGENTS = [
-      { name:"GitHub Copilot", company:"GitHub (Microsoft)", type:"IDE", popularity: 95,
+      { name:"GitHub Copilot", company:"GitHub (Microsoft)", type:"IDE", popularity: 100,
         pricing:["Free — limited usage","Pro — $10/mo (individual)","Enterprise — $39/user/mo"],
         homepage:"https://github.com/features/copilot",
         links:{ vscode:"GitHub.copilot", npm:"", github:"" },
@@ -74,83 +74,135 @@
           "Project Rules (.cursor/rules) guardrails"
         ]
       },
-      { name:"Windsurf Editor", company:"Codeium", type:"IDE", popularity: 75,
+      { name:"Windsurf Editor", company:"Codeium", type:"IDE", popularity: 45,
         pricing:["Free — limited credits","Pro — ~$15/mo","Teams — ~$30/user/mo"],
         homepage:"https://codeium.com/windsurf",
         links:{ vscode:"", npm:"", github:"" },
-        key_features:["Cascade agent (plan → edit → verify)","Repo awareness, Memories",""Supercomplete" completion"]
+        key_features:[
+          "Cascade agent (plan → edit → verify)",
+          "Repo awareness, Memories",
+          "Supercomplete completion"
+        ]
       },
-      { name:"Cline", company:"Open source", type:"VS Code Extension", popularity: 85,
+      { name:"Cline", company:"Open source", type:"VS Code Extension", popularity: 40,
         pricing:["Free — bring your own model/API key"],
         homepage:"https://cline.bot/",
         links:{ vscode:"saoudrizwan.claude-dev", npm:"", github:"cline/cline" },
-        key_features:["Autonomous edits (with approval)","Runs terminal + automates browser","Model-agnostic, MCP integration"]
+        key_features:[
+          "Autonomous edits (with approval)",
+          "Runs terminal + automates browser",
+          "Model-agnostic, MCP integration"
+        ]
       },
-      { name:"Continue.dev", company:"Continue Dev, Inc.", type:"VS Code Extension", popularity: 80,
+      { name:"Continue.dev", company:"Continue Dev, Inc.", type:"VS Code Extension", popularity: 50,
         pricing:["Solo — $0","Team — $10/dev/mo","Enterprise — contact sales","Models add-on — usage-based"],
         homepage:"https://www.continue.dev/",
         links:{ vscode:"Continue.continue", npm:"@continuedev/cli", github:"continuedev/continue" },
-        key_features:["Agent mode to implement changes","Plan Mode before edits","@context providers; OSS"]
+        key_features:[
+          "Agent mode to implement changes",
+          "Plan Mode before edits",
+          "@context providers; OSS"
+        ]
       },
-      { name:"Roo Code", company:"Roo Code Inc.", type:"VS Code Extension", popularity: 40,
+      { name:"Roo Code", company:"Roo Code Inc.", type:"VS Code Extension", popularity: 10,
         pricing:["Free — bring your own models","Optional cloud services"],
         homepage:"https://docs.roocode.com/",
         links:{ vscode:"RooVeterinaryInc.roo-cline", npm:"", github:"RooCodeInc/Roo-Code" },
-        key_features:["Autonomous edits; terminal/browser","Custom modes; multi-model","Local workflow + cloud"]
+        key_features:[
+          "Autonomous edits; terminal/browser",
+          "Custom modes; multi-model",
+          "Local workflow + cloud"
+        ]
       },
-      { name:"aider", company:"Open source", type:"CLI", popularity: 78,
+      { name:"aider", company:"Open source", type:"CLI", popularity: 55,
         pricing:["Free — open source (pip install aider)"],
         homepage:"https://aider.chat/",
         links:{ vscode:"", npm:"", github:"Aider-AI/aider" },
-        key_features:["Git-aware multi-file edits with diffs","Runs tests/commands","Reproducible changes & commits"]
+        key_features:[
+          "Git-aware multi-file edits with diffs",
+          "Runs tests/commands",
+          "Reproducible changes & commits"
+        ]
       },
-      { name:"Claude Code", company:"Anthropic", type:"CLI", popularity: 70,
+      { name:"Claude Code", company:"Anthropic", type:"CLI", popularity: 35,
         pricing:["Free (local CLI) — use your API key","Enterprise workflows — via Anthropic/partners"],
         homepage:"https://www.anthropic.com/claude-code",
         links:{ vscode:"", npm:"", github:"anthropics/claude-code" },
-        key_features:["Agentic terminal coding across repos","Multi-file edits, Git/PR flows","Long-context reasoning"]
+        key_features:[
+          "Agentic terminal coding across repos",
+          "Multi-file edits, Git/PR flows",
+          "Long-context reasoning"
+        ]
       },
-      { name:"Amazon Q Developer", company:"AWS", type:"Enterprise Suite", popularity: 65,
+      { name:"Amazon Q Developer", company:"AWS", type:"Enterprise Suite", popularity: 70,
         pricing:["Free tier — limited agentic requests","Pro — $19/user/mo (higher limits)"],
         homepage:"https://aws.amazon.com/q/developer/",
         links:{ vscode:"AmazonWebServices.amazon-q-vscode", npm:"", github:"" },
-        key_features:["Agentic coding in IDE/CLI","Code transformation pipelines","IAM/SSO, admin dashboards"]
+        key_features:[
+          "Agentic coding in IDE/CLI",
+          "Code transformation pipelines",
+          "IAM/SSO, admin dashboards"
+        ]
       },
-      { name:"Gemini Code Assist", company:"Google Cloud", type:"Enterprise Suite", popularity: 60,
+      { name:"Gemini Code Assist", company:"Google Cloud", type:"Enterprise Suite", popularity: 75,
         pricing:["Individual — free (limited)","Standard — contact sales","Enterprise — contact sales"],
-        homepage:"https://cloud.google.com/products/gemini-code-assist",  <!-- fixed -->
+        homepage:"https://cloud.google.com/products/gemini-code-assist",
         links:{ vscode:"GoogleCloudTools.cloudcode", npm:"", github:"" },
-        key_features:["Agent mode with ultra-long context","Checkpoints, terminal capture","Zero-retention options"]
+        key_features:[
+          "Agent mode with ultra-long context",
+          "Checkpoints, terminal capture",
+          "Zero-retention options"
+        ]
       },
-      { name:"Replit Agent", company:"Replit", type:"Cloud Platform", popularity: 72,
+      { name:"Replit Agent", company:"Replit", type:"Cloud Platform", popularity: 65,
         pricing:["Included in Replit Core — ~$20/mo (annual)","Effort-based usage pricing"],
         homepage:"https://replit.com/agent",
         links:{ vscode:"", npm:"", github:"" },
-        key_features:["Plan → approve → build checkpoints","Deploy & host on Replit","Effort-based billing"]
+        key_features:[
+          "Plan → approve → build checkpoints",
+          "Deploy & host on Replit",
+          "Effort-based billing"
+        ]
       },
-      { name:"Sourcegraph Cody", company:"Sourcegraph", type:"Enterprise Suite", popularity: 55,
+      { name:"Sourcegraph Cody", company:"Sourcegraph", type:"Enterprise Suite", popularity: 40,
         pricing:["Free — limited","Pro — paid","Enterprise — paid","Amp (agentic) — prepaid credits"],
         homepage:"https://sourcegraph.com/cody",
         links:{ vscode:"sourcegraph.cody-ai", npm:"", github:"" },
-        key_features:["Deep code graph & search","Assistant for edits/navigation","Amp agent via credits"]
+        key_features:[
+          "Deep code graph & search",
+          "Assistant for edits/navigation",
+          "Amp agent via credits"
+        ]
       },
-      { name:"Tabnine", company:"Tabnine", type:"Enterprise Suite", popularity: 68,
+      { name:"Tabnine", company:"Tabnine", type:"Enterprise Suite", popularity: 55,
         pricing:["Developer — $9/mo","Enterprise — $39/user/mo","Private/self-hosted & air-gapped"],
         homepage:"https://www.tabnine.com/",
         links:{ vscode:"TabNine.tabnine-vscode", npm:"", github:"codota/tabnine-vscode" },
-        key_features:["Completions & chat; agents (preview)","Switchable/self-host models","SaaS/VPC/on-prem/air-gapped"]
+        key_features:[
+          "Completions & chat; agents (preview)",
+          "Switchable/self-host models",
+          "SaaS/VPC/on-prem/air-gapped"
+        ]
       },
-      { name:"Devin", company:"Cognition", type:"Cloud Platform", popularity: 82,
+      { name:"Devin", company:"Cognition", type:"Cloud Platform", popularity: 30,
         pricing:["Core — usage-based","Team — subscription + usage","Enterprise — contact sales"],
         homepage:"https://www.cognition.ai/",
         links:{ vscode:"", npm:"", github:"" },
-        key_features:["Plans, codes, tests, deploys","Team/API, multi-session","Hosted platform"]
+        key_features:[
+          "Plans, codes, tests, deploys",
+          "Team/API, multi-session",
+          "Hosted platform"
+        ]
       },
-      { name:"JetBrains AI Assistant", company:"JetBrains", type:"JetBrains Add-on", popularity: 62,
+      { name:"JetBrains AI Assistant", company:"JetBrains", type:"JetBrains Add-on", popularity: 25,
         pricing:["AI Pro — $10/mo","AI Ultimate — $30/mo"],
         homepage:"https://www.jetbrains.com/ai/",
         links:{ vscode:"", npm:"", github:"" },
-        key_features:["Chat, refactors, intentions","Model routing via service","Org governance & quotas"]
+        key_features:[
+          "Chat, refactors, intentions",
+          "Model routing via service",
+          "Org governance & quotas"
+        ]
       }
     ];
 
@@ -294,7 +346,7 @@
         React.createElement("td", { className:"px-4 py-4 align-top text-center" },
           React.createElement("div", { className:"inline-flex items-center justify-center w-12 h-8 rounded-full bg-gradient-to-r from-neon/20 to-neon2/20 border border-neon/30 text-neon font-semibold text-sm" }, a.popularity)
         ),
-        React.createElement("td", { className:"px-4 py-4 align-top" }, React.createElement(BadgeLinks,{links:a.links}))
+        React.createElement("td", { className:"px-4 py-4 align-top w-48 min-w-[12rem]" }, React.createElement(BadgeLinks,{links:a.links}))
       )
     );
 
