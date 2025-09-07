@@ -41,6 +41,7 @@
     .ring-glow { box-shadow: 0 0 0 1px rgba(122,255,238,.20), inset 0 0 0 1px rgba(255,255,255,.03); }
     .neon-border { box-shadow: 0 0 0 1px rgba(103,168,255,.35), inset 0 0 0 1px rgba(255,255,255,.04); }
     .badge img{ vertical-align: middle; }
+    .badge{ display: inline-block; margin: 0.125rem 0; }
     .kicker{ display:inline-block; border:1px solid rgba(103,168,255,.35); background:rgba(103,168,255,.10); padding:.25rem .6rem; border-radius:999px; font-size:.75rem; font-weight:700; color:#B8D4FF }
   </style>
 </head>
@@ -258,7 +259,7 @@
 
     const BadgeLinks = ({ links }) => {
       const items = [];
-      const controls = [];
+      let hasRetry = false;
 
       // VS Code — static pill + dynamic shields (can error/rate-limit)
       if (links?.vscode) {
@@ -276,17 +277,7 @@
              <img alt="rating" src="${ratingSrc}">
            </a>`
         );
-
-        // manual retry (cache-bust) for shields hits
-        controls.push(
-          `<button class="ml-2 text-xs text-slate-300/80 hover:text-sky-200 underline"
-                   onclick="
-                     const imgs = this.parentElement.querySelectorAll('img[alt^=vs], img[alt=rating]');
-                     imgs.forEach(img => { img.src = img.src.split('?')[0] + '?r=' + Math.random().toString(36).slice(2); });
-                   ">
-             retry
-           </button>`
-        );
+        hasRetry = true;
       }
 
       // npm — encode for scoped packages
@@ -309,11 +300,35 @@
         );
       }
 
-      const html = (items.join("") || '<span class="text-slate-400">—</span>') + (controls.join("") || "");
+      const badgesHtml = items.join("") || '<span class="text-slate-400">—</span>';
+      
       return React.createElement("div", {
-        className: "flex flex-wrap items-center gap-2",
-        dangerouslySetInnerHTML: { __html: html }
-      });
+        className: "relative"
+      },
+        React.createElement("div", {
+          className: "flex flex-wrap items-start gap-1.5 pr-6",
+          dangerouslySetInnerHTML: { __html: badgesHtml }
+        }),
+        hasRetry && React.createElement("button", {
+          className: "absolute top-0 right-0 w-5 h-5 text-slate-400 hover:text-sky-200 transition-colors",
+          title: "Retry badges",
+          onClick: () => {
+            const imgs = document.querySelectorAll('img[alt^="vs marketplace"], img[alt="rating"]');
+            imgs.forEach(img => { 
+              img.src = img.src.split('?')[0] + '?r=' + Math.random().toString(36).slice(2); 
+            });
+          }
+        },
+          React.createElement("svg", {
+            width: "16", height: "16", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round"
+          },
+            React.createElement("path", { d: "M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" }),
+            React.createElement("path", { d: "M21 3v5h-5" }),
+            React.createElement("path", { d: "M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" }),
+            React.createElement("path", { d: "M3 21v-5h5" })
+          )
+        )
+      );
     };
 
     const FeatureList = ({ items }) =>
